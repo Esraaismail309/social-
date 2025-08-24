@@ -7,8 +7,9 @@ import { zodResolver } from "@hookform/resolvers/zod"
 
 import * as zod from 'zod'
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../Context/AuthContext";
 
 export default function Login() {
 
@@ -16,6 +17,9 @@ export default function Login() {
     const [errorMsg, setErrorMsg] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
     const navigate = useNavigate()
+
+
+    const { setUserToken } = useContext(AuthContext)
 
 
 
@@ -48,9 +52,9 @@ export default function Login() {
         //     data:values
         // })
         axios.post('https://linked-posts.routemisr.com/users/signin', values).then((response) => {
-            console.log(response);
             if (response.data.message === 'success') {
                 setIsLoading(false)
+                setUserToken(response.data.token)
                 localStorage.setItem('token', response.data.token)
                 navigate('/')
             }
@@ -80,7 +84,7 @@ export default function Login() {
                     })} />
 
 
-                <Button color="primary" variant="bordered" type="submit" isDisabled={isLoading} isLoading={isLoading}>{isLoading ? 'Loadinggg' : 'Login'}</Button>
+                <Button color="primary" variant="bordered" type="submit" isLoading={isLoading}>{'Login'}</Button>
 
             </form>
         </main>
